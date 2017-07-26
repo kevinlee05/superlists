@@ -1,2 +1,2 @@
 #!/bin/bash
-xvfb-run python functional_tests.py
+xvfb-run python manage.py test functional_tests

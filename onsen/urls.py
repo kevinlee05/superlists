@@ -1,4 +1,4 @@
-"""superlists URL Configuration
+"""onsen URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/dev/topics/http/urls/
@@ -14,14 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from django.contrib import admin
-from django.views.generic import TemplateView
-from lists import views
+from . import views
 
 urlpatterns = [
-    url(r'^$', views.home_page, name='home'),
-    url(r'^admin/', admin.site.urls),
-    url(r'^onsen/', include('onsen.urls')),
-    url(r'^react/', TemplateView.as_view(template_name='index.html')),
+    url(r'^$', views.index, name='index'),
 
 ]

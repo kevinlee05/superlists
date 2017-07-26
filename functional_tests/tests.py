@@ -1,17 +1,26 @@
 from django.test import LiveServerTestCase
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 import unittest
 
 
+
+
 class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
+        #virtual display for pythonanywhere
+        display = Display(visible=0, size=(1024, 768))
+        display.start()
+
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
+        #close virtual display
+        display.stop()
 
     def check_for_row_in_list_table(self, row_text):
         table = self.browser.find_element_by_id('id_list_table')
