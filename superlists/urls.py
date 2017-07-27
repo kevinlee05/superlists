@@ -21,7 +21,5 @@ from lists import views
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
     url(r'^admin/', admin.site.urls),
-    url(r'^onsen/', include('onsen.urls')),
-    url(r'^react/', TemplateView.as_view(template_name='index.html')),
 
 ]
