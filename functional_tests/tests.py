@@ -1,12 +1,14 @@
 from django.test import LiveServerTestCase
 from pyvirtualdisplay import Display
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 import time
 import unittest
 
-class NewVisitorTest(LiveServerTestCase):
+MAX_WAIT = 10 #set the maximum amount of time we’re prepared to wait
 
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         #virtual display for pythonanywhere
@@ -20,9 +22,28 @@ class NewVisitorTest(LiveServerTestCase):
         self.display.stop()
 
     def check_for_row_in_list_table(self, row_text):
+        # replaced with wait_for_row_in_list_table
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
+
+    def wait_for_row_in_list_table(self, row_text):
+        # add explicit waits to the test
+        start_time = time.time()
+        while True:
+            try:
+                # modified from check_for_row_in_list_table
+                table = self.browser.find_element_by_id('id_list_table')
+                rows = table.find_elements_by_tag_name('tr')
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                """
+                There are two types of exceptions we want to catch: WebDriverException for when the page hasn’t loaded and Selenium can’t find the table element on the page, and AssertionError for when the table is there, but it’s perhaps a table from before the page reloads, so it doesn’t have our row in yet.
+                """
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         #user has heard about new online todo app.
@@ -46,11 +67,10 @@ class NewVisitorTest(LiveServerTestCase):
 
         # when user hits enter, page updates and page lists the item in the todo list
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
-
-        # table = self.browser.find_element_by_id('id_list_table')
-
+        self.wait_for_row_in_list_table('1: Buy peacock feathers')
+        #time.sleep(1)
+        #self.check_for_row_in_list_table('1: Buy peacock feathers')
+        #table = self.browser.find_element_by_id('id_list_table')
 
         # there is still a textbox inviting her to add another item. user enters
         # "use peacock feathers to make a fly"
@@ -60,8 +80,10 @@ class NewVisitorTest(LiveServerTestCase):
         time.sleep(1)
 
         #page updates and shows the second item on the list
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
-        self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        #self.check_for_row_in_list_table('1: Buy peacock feathers')
+        #self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        self.wait_for_row_in_list_table('2: Use peacock feathers to make a fly')
+        self.wait_for_row_in_list_table('1: Buy peacock feathers')
 
 
         self.fail('Finish the test!')
