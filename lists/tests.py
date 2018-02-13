@@ -49,14 +49,15 @@ class HomePageTest(TestCase):
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_displays_all_list_items(self):
-        Item.objects.create(text="itemey 1")
-        Item.objects.create(text="itemey 2")
+    # shifted to ListViewTest
+    # def test_displays_all_list_items(self):
+    #     Item.objects.create(text="itemey 1")
+    #     Item.objects.create(text="itemey 2")
 
-        response = self.client.get('/')
+    #     response = self.client.get('/')
 
-        self.assertIn('itemey 1', response.content.decode())
-        self.assertIn('itemey 2', response.content.decode())
+    #     self.assertIn('itemey 1', response.content.decode())
+    #     self.assertIn('itemey 2', response.content.decode())
 
 
 class ItemModelTest(TestCase):
@@ -97,8 +98,8 @@ class ListViewTest(TestCase):
 class NewListTest(TestCase):
 
     def test_can_save_a_POST_request(self):
-        self.client.post('/lists/new', data{'item_text': 'A new list item'})
-        self.assertEqual(Item.objets.count(), 1)
+        self.client.post('/lists/new', data = {'item_text': 'A new list item'})
+        self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new list item')
 
