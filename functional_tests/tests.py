@@ -4,6 +4,7 @@ from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
+import os
 import time
 import unittest
 
@@ -16,6 +17,10 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.display = Display(visible=0, size=(1024, 768))
         self.display.start()
         self.browser = webdriver.Firefox()
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            print(staging_server)
+            self.live_server_url = 'http://' + staging_server
 
     def tearDown(self):
         self.browser.quit()
