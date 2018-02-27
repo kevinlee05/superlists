@@ -22,7 +22,7 @@ if 'DJANGO_DEBUG_FALSE' in os.environ:
     DEBUG = False
     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
     ALLOWED_HOSTS = [os.environ['SITENAME']]
-else
+else:
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'z-5^jvl7y_%6opfvt@n$^eikfj)k5_9=9d$=4_2d#b)&#ryx3b'
     # SECURITY WARNING: don't run with debug turned on in production!
