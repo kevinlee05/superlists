@@ -3,11 +3,9 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.common.keys import Keys
-from unittest import skip
 import os
 import time
-import unittest
+
 
 MAX_WAIT = 10 #set the maximum amount of time we’re prepared to wait
 
@@ -44,5 +42,24 @@ class FunctionalTest(StaticLiveServerTestCase):
                 if time.time() - start_time > MAX_WAIT:
                     raise e
                 time.sleep(0.5)
+
+    def wait_for(self, fn):
+        start_time = time.time()
+        while True:
+            try:
+                return fn()
+                # The body of our try/except, instead of being the specific code for examining table rows,
+                # just becomes a call to the function we passed in.
+                # We also return its return value to be able to exit the loop immediately if no exception is raised.
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
+
+
+
+
+
 
 
