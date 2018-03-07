@@ -18,6 +18,10 @@ class ItemForm(forms.models.ModelForm):
             'text': {'required': EMPTY_ITEM_ERROR }
         }
 
+    def save(self, for_list): #custom save function to save item to a specific list
+        self.instance.list = for_list
+        return super().save()
+
 class ItemFormManual(forms.Form):
     item_text = forms.CharField(
             widget=forms.fields.TextInput(attrs={
